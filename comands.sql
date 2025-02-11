@@ -24,16 +24,14 @@ FROM
 GROUP BY od.order_id;
 
 --4: Використовує WITH для створення тимчасової таблиці temp, що дозволяє обчислити середнє значення quantity для рядків з order_details, де quantity > 10.
-CREATE TEMPORARY TABLE temp AS
-SELECT quantity, order_id 
-FROM order_details 
-WHERE quantity > 10;
-
-SELECT avg(quantity) AS average_quantity
+WITH temp AS (
+    SELECT order_id, quantity
+    FROM order_details
+    WHERE quantity > 10
+)
+SELECT order_id, AVG(quantity) AS avg_quantity
 FROM temp
 GROUP BY order_id;
-
-DROP TEMPORARY TABLE IF EXISTS temp;
 
 --5: Створює функцію для ділення двох значень типу FLOAT і використовує її для обчислення результату ділення поля quantity на число 10.
 -- Створення функції
